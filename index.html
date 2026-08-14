@@ -4,7 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#050708">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SLAP SCENE">
   <title>SLAP SCENE — Sticker Art Prompt Builder</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/app-icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -38,7 +43,7 @@
         <button class="menu-button icon-btn" id="openNav" aria-label="Open menu">☰</button>
         <div class="project-title"><small>PROJECT NAME</small><input id="projectName" value="Untitled Project" aria-label="Project name"><span>✎</span></div>
         <div class="motto"><b>✣ CREATE EVERYTHING.</b><span>SLAP ANYTHING.</span></div>
-        <div class="top-actions"><button id="saveProject">☁　SAVE</button><button id="shareProject">⌯　SHARE</button><button class="lime" id="exportProject">⇩　EXPORT</button></div>
+        <div class="top-actions"><button class="install-action" id="installApp">⇩　INSTALL APP</button><button id="saveProject">☁　SAVE</button><button id="shareProject">⌯　SHARE</button><button class="lime" id="exportProject">⇩　EXPORT</button></div>
       </header>
 
       <main class="workspace" id="workspace">

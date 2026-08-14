@@ -6,6 +6,10 @@ SLAP SCENE v1.0.0 is a local-first, responsive studio for composing production-a
 
 Open `index.html` directly, or run `node dev-server.cjs 4173` and visit `http://127.0.0.1:4173`. No build step, backend, account, or API key is required.
 
+## Install on a phone
+
+Open the public HTTPS site on the phone and tap **INSTALL APP**. Android browsers can show the native installation prompt. On iPhone or iPad, the app displays the Safari **Share → Add to Home Screen** steps. The installed app uses a standalone window and keeps projects, uploaded images, and music in that device's browser storage.
+
 ## Features
 
 - Build With Me, compatibility-aware Shake the Box, and role-based Mix the Lab.

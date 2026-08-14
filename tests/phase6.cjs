@@ -131,7 +131,9 @@ assert.ok(html.includes('Sticker Art Prompt Builder')&&!html.includes('Sticker A
 assert.ok(html.includes('aria-label="Close dialog"')&&html.includes('aria-live="polite"'));
 assert.ok(html.includes('id="manageImages"')&&html.includes('UPLOAD IMAGES'),'shared image upload is available');
 assert.ok(html.includes('id="musicFiles"')&&html.includes('id="musicPlayer"')&&html.includes('CREATE MODE MUSIC'),'private music player is available');
+assert.ok(html.includes('rel="manifest"')&&html.includes('id="installApp"')&&html.includes('apple-mobile-web-app-capable'),'phone app installation entry points are present');
 assert.ok(appText.includes('slapSceneMusicLibrary')&&appText.includes('file.size<=30*1024*1024'),'music stays browser-local with file-size limits');
+assert.ok(appText.includes('beforeinstallprompt')&&appText.includes('Add to Home Screen')&&appText.includes("serviceWorker.register('./sw.js')"),'Android and iOS install flows are wired');
 assert.ok(appText.includes('data-dashboard-page')&&appText.includes('dashboardModal()'),'dashboard is a connected workflow hub');
 assert.ok(appText.includes('builder-progress')&&appText.includes('STEP ${step+1} OF 4'),'Build With Me is a guided workflow');
 assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} CATEGORY')&&appText.includes('LOCKED AGE CATEGORY'),'youth character setup is visibly separated and protected');
@@ -143,6 +145,8 @@ assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.incl
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
 assert.ok(fs.existsSync('assets/samples/slap-scene-hero.png'));
+const manifest=JSON.parse(fs.readFileSync('manifest.webmanifest','utf8')),worker=fs.readFileSync('sw.js','utf8');assert.strictEqual(manifest.display,'standalone');assert.ok(manifest.icons.some(icon=>icon.sizes==='192x192')&&manifest.icons.some(icon=>icon.sizes==='512x512'));assert.ok(worker.includes('slap-scene-shell-v1')&&worker.includes("caches.match('./index.html')"));
+for(const size of [192,512]){const icon=fs.readFileSync(`assets/icons/app-icon-${size}.png`);assert.strictEqual(icon.readUInt32BE(16),size);assert.strictEqual(icon.readUInt32BE(20),size)}
 assert.ok(readme.includes('1.0.0'));
 
 console.log('SLAP SCENE Phase 6 release QA passed (v1.0.0 + prompts + 10 shakes + Lab + all packs/sheets/remixes + guards + resilience + accessibility)');
