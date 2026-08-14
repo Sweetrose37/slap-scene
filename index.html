@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050708">
+  <title>SLAP SCENE — Sticker Art Prompt Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <button class="close-nav icon-btn" id="closeNav" aria-label="Close menu">×</button>
+      <div class="brand" aria-label="Slap Scene">
+        <span class="brand-crown">♛</span><span class="brand-slap">SLAP</span>
+        <span class="brand-scene">SCENE</span>
+        <strong>STICKER ART PROMPT BUILDER</strong><em>ALL STYLES. ALL DAY.</em>
+      </div>
+      <button class="new-project primary-outline" id="newProject">＋ NEW PROJECT</button>
+      <nav class="main-nav" id="mainNav"></nav>
+      <div class="nav-divider"></div>
+      <nav class="utility-nav">
+        <button data-page="library"><span>▣</span> MY LIBRARY</button>
+        <button data-page="projects"><span>▱</span> MY PROJECTS</button>
+        <button disabled title="Coming later"><span>♧</span> COMMUNITY <small>COMING LATER</small></button>
+        <button data-page="inspiration"><span>⌖</span> INSPIRATION</button>
+        <button data-page="settings"><span>⚙</span> SETTINGS</button>
+      </nav>
+      <div class="points-card"><div><span class="bolt">ϟ</span><small>SCENE POINTS</small><b>7,250</b></div><div class="meter"><i></i></div><footer>LVL 12 <span>NEXT: 8,000</span></footer></div>
+      <div class="socials">◎　◉　▶　♪</div>
+    </aside>
+
+    <div class="app-content">
+      <header class="topbar">
+        <button class="menu-button icon-btn" id="openNav" aria-label="Open menu">☰</button>
+        <div class="project-title"><small>PROJECT NAME</small><input id="projectName" value="Untitled Project" aria-label="Project name"><span>✎</span></div>
+        <div class="motto"><b>✣ CREATE EVERYTHING.</b><span>SLAP ANYTHING.</span></div>
+        <div class="top-actions"><button id="saveProject">☁　SAVE</button><button id="shareProject">⌯　SHARE</button><button class="lime" id="exportProject">⇩　EXPORT</button></div>
+      </header>
+
+      <main class="workspace" id="workspace">
+        <section class="studio-column">
+          <section class="canvas-panel panel">
+            <div class="tabs" id="canvasTabs"></div>
+            <div class="canvas-wrap">
+              <div class="canvas-tools" id="canvasTools"></div>
+              <div class="artboard" id="artboard">
+                <div class="art-image" id="artImage" role="img" aria-label="Decorative SLAP SCENE sample collage preview"></div>
+                <div class="canvas-badge">SLAP<br><span>SCENE</span></div>
+                <div class="selection-ring" id="selectionRing" aria-hidden="true"></div>
+              </div>
+              <div class="canvas-controls">
+                <button id="panTool" aria-label="Pan concept board">☝</button><button id="zoomOut" aria-label="Zoom out">−</button><strong id="zoomLabel" aria-live="polite">100%</strong><button id="zoomIn" aria-label="Zoom in">＋</button><button id="fitCanvas" aria-label="Fit concept board">◔　Fit</button><button id="fullCanvas" aria-label="Toggle full concept board">⌗</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="gallery panel">
+            <div class="section-heading"><div><b>SCENE GALLERY</b><span>Explore Styles & Get Inspired</span></div><button data-page="inspiration">View All⌄</button></div>
+            <div class="gallery-track" id="galleryTrack"></div>
+          </section>
+
+          <div class="bottom-builders">
+            <section class="builder-card panel"><div class="section-heading"><div><b>BUILD A PACK</b><span>Curate Your Collection</span></div></div><div class="mini-collection" id="packPreview"></div></section>
+            <section class="builder-card panel"><div class="section-heading"><div><b>BUILD A SHEET</b><span>Print-Ready Sheets</span></div></div><div class="sheet-preview" id="sheetPreview"><div class="sheet-paper" id="sheetPaper"></div><button data-page="sheet">＋<br>NEW SHEET</button></div></section>
+          </div>
+        </section>
+
+        <aside class="controls-column">
+          <section class="control-panel panel"><div class="section-heading"><div><b>STYLE</b><span id="styleSummary">All Styles. All Day.</span></div><button id="viewStyles">View All⌄</button></div><div class="style-grid" id="styleGrid"></div></section>
+          <section class="control-panel panel"><div class="section-heading"><div><b>MATERIAL</b></div><button id="materialMore">Pick Your Vibe⌄</button></div><div class="chip-grid" id="materialGrid"></div></section>
+          <section class="control-panel panel"><div class="section-heading"><div><b>ELEMENTS</b><span>Add / Remove Elements</span></div></div><div class="element-grid" id="elementGrid"></div><div class="recent-head"><b>RECENT ELEMENTS</b><button>View All</button></div><div class="recent-elements" id="recentElements"></div></section>
+          <section class="prompt-panel panel"><div class="section-heading"><div><b>PROMPT ENGINE</b><span>Build Your Finished Prompt</span></div></div><textarea id="promptInput" placeholder="Your finished sticker-art prompt will appear here..."></textarea><div class="prompt-actions"><button id="smartSuggest">✣ SMART SUGGEST</button><button id="copyPrompt">▣ COPY</button><button id="clearPrompt">× CLEAR</button><button id="rebuildPrompt">↻ REBUILD</button><button class="lime" id="buildPromptButton">✦ BUILD PROMPT</button></div></section>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalSubtitle"><button class="modal-close" id="modalClose" aria-label="Close dialog">×</button><h2 id="modalTitle"></h2><p id="modalSubtitle"></p><div id="modalBody"></div></section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
