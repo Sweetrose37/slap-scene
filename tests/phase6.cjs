@@ -38,6 +38,14 @@ for(const subject of ['Babies','Toddlers','Kids','Tweens','Teens']){
   assert.ok(!agePrompt.includes(`adult ${subject.toLowerCase()}`),`${subject} never inherits the Adult prefix`);
   assert.ok(agePrompt.includes('developmentally appropriate'),`${subject} receives age-aware styling`);
 }
+const youthExpectations={Babies:['natural infant','soft cotton onesie','infant proportions'],Toddlers:['natural toddler','comfortable overalls','toddler proportions'],Kids:['natural child','colorful t-shirt','school-age child'],Tweens:['natural preteen','layered graphic tee','distinct preteen'],Teens:['natural adolescent','layered teen streetwear','clearly adolescent']};
+for(const [subject,phrases] of Object.entries(youthExpectations)){
+  const youthPrompt=T.buildPrompt({...base,subject,age:'Adult',fashionDirection:'Couture-Inspired',bodyBuild:'Curvy',pose:'Editorial lean'}).toLowerCase();
+  for(const phrase of phrases)assert.ok(youthPrompt.includes(phrase),`${subject} includes separate ${phrase} guidance`);
+  assert.ok(youthPrompt.includes('never apply adult body proportions')&&youthPrompt.includes('revealing garments'),`${subject} blocks adult styling`);
+  const youthPack=T.buildPackPrompts({...base,subject,age:'Adult'},3,'COORDINATED',{theme:`${subject} Collection`,wordingMode:'NONE'});
+  assert.ok(youthPack.entries.every(entry=>entry.prompt.includes('Never apply adult body proportions')&&!entry.prompt.includes('sharp tailored separates')),`${subject} pack reapplies the youth guard`);
+}
 
 const auto={...base,subject:'Automotive',style:'Retro Advertising',era:'1980s',material:'Chrome',composition:'Poster Inspired'};
 const autoPrompt=T.buildPrompt(auto);
