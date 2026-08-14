@@ -5,7 +5,7 @@ const vm=require('vm');
 const dataSource=fs.readFileSync('js/data.js','utf8');
 const appSource=fs.readFileSync('js/app.js','utf8').replace(
   /\n  init\(\);\n\}\)\(\);\s*$/,
-  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,youthMoods,zodiacSigns,zodiacImagery,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
+  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,youthMoods,zodiacSigns,zodiacImagery,holidayCharacters,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
 );
 const memory=new Map([
   ['slapSceneShakeHistory','{"corrupted":true}'],
@@ -65,6 +65,11 @@ assert.ok(autoPrompt.includes('original fictional vehicle design')&&autoPrompt.i
 const zodiacAnchors={Aries:'ram',Taurus:'bull',Gemini:'twin',Cancer:'crab',Leo:'lion',Virgo:'maiden',Libra:'scales',Scorpio:'scorpion',Sagittarius:'centaur archer',Capricorn:'sea-goat',Aquarius:'water-bearer',Pisces:'two fish'};
 assert.strictEqual(T.zodiacSigns.length,12,'all twelve zodiac signs are available individually');
 for(const sign of T.zodiacSigns){const prompt=T.buildPrompt({...base,subject:'Zodiac',zodiacSign:sign}).toLowerCase();assert.ok(prompt.includes(`${sign.toLowerCase()} zodiac sign`)&&prompt.includes(zodiacAnchors[sign]),`${sign} uses its own canonical image`);assert.ok(prompt.includes(`represents ${sign.toLowerCase()} only`)&&prompt.includes('do not create a zodiac wheel'),`${sign} blocks collective zodiac imagery`)}
+
+assert.deepStrictEqual([...T.holidayCharacters],['No Human Character','Baby','Toddler','Child','Tween','Teen','Young Adult','Adult','Middle-Aged Adult','Elder','Family / Mixed Ages'],'holiday character ages are explicit');
+const objectHoliday=T.buildPrompt({...base,subject:'Holidays',holidayCharacter:'No Human Character'}).toLowerCase();assert.ok(!objectHoliday.includes('natural hands with correct finger counts'),'no-character holiday stays object/scene based');
+const childHoliday=T.buildPrompt({...base,subject:'Holidays',holidayCharacter:'Child',mood:'Flirty'}).toLowerCase();assert.ok(childHoliday.includes('child holidays')&&childHoliday.includes('school-age child')&&!childHoliday.includes('flirty'),'child holiday opens the protected child profile');
+const adultHoliday=T.buildPrompt({...base,subject:'Holidays',holidayCharacter:'Adult'}).toLowerCase();assert.ok(adultHoliday.includes('adult holidays')&&adultHoliday.includes('natural hands with correct finger counts'),'adult holiday opens adult character intelligence');
 
 const fusionBase={a:'Watercolor',b:'Cyberpunk',c:'None',material:'Embroidered',secondaryMaterial:'None',rendering:'Mixed-Media Rendering',era:'Contemporary',mood:'Experimental',composition:'Layered Collage'};
 const light=T.translateFusion({...fusionBase,strength:'LIGHT'}),balanced=T.translateFusion({...fusionBase,strength:'BALANCED'}),heavy=T.translateFusion({...fusionBase,strength:'HEAVY'});
@@ -133,6 +138,7 @@ assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} CATEGORY')&&appT
 assert.ok(appText.includes('youthControls')&&appText.includes('CLOTHING & ACCESSORIES')&&appText.includes('No adult character, clothing, body, pose, or expression lists are loaded'),'youth dropdown sources are fully separate from adult controls');
 assert.ok(appText.includes('youthMoods')&&appText.includes("youth?youthMoods[age]:D.moods"),'youth mood dropdowns do not use the adult mood source');
 assert.ok(appText.includes('INDIVIDUAL ZODIAC SIGN')&&appText.includes('const zodiacImagery='),'zodiac concepts expose individual canonical sign imagery');
+assert.ok(appText.includes('HOLIDAY HUMAN CHARACTER')&&appText.includes("'holidayCharacter'")&&appText.includes('LOCKED HOLIDAY CHARACTER AGE'),'holiday concepts route to the selected human age profile');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
