@@ -112,6 +112,9 @@ assert.ok(html.includes('aria-label="Close dialog"')&&html.includes('aria-live="
 assert.ok(html.includes('id="manageImages"')&&html.includes('UPLOAD IMAGES'),'shared image upload is available');
 assert.ok(html.includes('id="musicFiles"')&&html.includes('id="musicPlayer"')&&html.includes('CREATE MODE MUSIC'),'private music player is available');
 assert.ok(appText.includes('slapSceneMusicLibrary')&&appText.includes('file.size<=30*1024*1024'),'music stays browser-local with file-size limits');
+assert.ok(appText.includes('data-dashboard-page')&&appText.includes('dashboardModal()'),'dashboard is a connected workflow hub');
+assert.ok(appText.includes('builder-progress')&&appText.includes('STEP ${step+1} OF 4'),'Build With Me is a guided workflow');
+assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} PROFILE')&&appText.includes('Adult body and fashion controls are unavailable'),'youth character setup is visibly separated and protected');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
