@@ -33,6 +33,11 @@ const kids={...base,subject:'Kids',age:'Child',style:'Semi-Realistic',fashionDir
 const kidsPrompt=T.buildPrompt(kids);
 assert.ok(kidsPrompt.includes('developmentally appropriate')&&kidsPrompt.includes('natural hands with correct finger counts'),'kids styling and anatomy guard remain active');
 assert.ok(kidsPrompt.includes('independently designed'),'fashion originality guard remains active');
+for(const subject of ['Babies','Toddlers','Kids','Tweens','Teens']){
+  const agePrompt=T.buildPrompt({...base,subject,age:'Adult'}).toLowerCase();
+  assert.ok(!agePrompt.includes(`adult ${subject.toLowerCase()}`),`${subject} never inherits the Adult prefix`);
+  assert.ok(agePrompt.includes('developmentally appropriate'),`${subject} receives age-aware styling`);
+}
 
 const auto={...base,subject:'Automotive',style:'Retro Advertising',era:'1980s',material:'Chrome',composition:'Poster Inspired'};
 const autoPrompt=T.buildPrompt(auto);
@@ -96,7 +101,9 @@ assert.ok(!T.buildPrompt(auto).includes('natural hands with correct finger count
 const html=fs.readFileSync('index.html','utf8'),css=fs.readFileSync('css/styles.css','utf8'),readme=fs.readFileSync('README.md','utf8');
 assert.ok(html.includes('Sticker Art Prompt Builder')&&!html.includes('Sticker Art Generator'));
 assert.ok(html.includes('aria-label="Close dialog"')&&html.includes('aria-live="polite"'));
+assert.ok(html.includes('id="manageImages"')&&html.includes('UPLOAD IMAGES'),'shared image upload is available');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
+assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
 assert.ok(fs.existsSync('assets/samples/slap-scene-hero.png'));
 assert.ok(readme.includes('1.0.0'));
