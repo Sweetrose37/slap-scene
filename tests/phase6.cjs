@@ -5,7 +5,7 @@ const vm=require('vm');
 const dataSource=fs.readFileSync('js/data.js','utf8');
 const appSource=fs.readFileSync('js/app.js','utf8').replace(
   /\n  init\(\);\n\}\)\(\);\s*$/,
-  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
+  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,zodiacSigns,zodiacImagery,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
 );
 const memory=new Map([
   ['slapSceneShakeHistory','{"corrupted":true}'],
@@ -59,6 +59,10 @@ for(const [age,options] of Object.entries(T.youthControls)){
 const auto={...base,subject:'Automotive',style:'Retro Advertising',era:'1980s',material:'Chrome',composition:'Poster Inspired'};
 const autoPrompt=T.buildPrompt(auto);
 assert.ok(autoPrompt.includes('original fictional vehicle design')&&autoPrompt.includes('manufacturer-specific wheels'),'automotive guard remains active');
+
+const zodiacAnchors={Aries:'ram',Taurus:'bull',Gemini:'twin',Cancer:'crab',Leo:'lion',Virgo:'maiden',Libra:'scales',Scorpio:'scorpion',Sagittarius:'centaur archer',Capricorn:'sea-goat',Aquarius:'water-bearer',Pisces:'two fish'};
+assert.strictEqual(T.zodiacSigns.length,12,'all twelve zodiac signs are available individually');
+for(const sign of T.zodiacSigns){const prompt=T.buildPrompt({...base,subject:'Zodiac',zodiacSign:sign}).toLowerCase();assert.ok(prompt.includes(`${sign.toLowerCase()} zodiac sign`)&&prompt.includes(zodiacAnchors[sign]),`${sign} uses its own canonical image`);assert.ok(prompt.includes(`represents ${sign.toLowerCase()} only`)&&prompt.includes('do not create a zodiac wheel'),`${sign} blocks collective zodiac imagery`)}
 
 const fusionBase={a:'Watercolor',b:'Cyberpunk',c:'None',material:'Embroidered',secondaryMaterial:'None',rendering:'Mixed-Media Rendering',era:'Contemporary',mood:'Experimental',composition:'Layered Collage'};
 const light=T.translateFusion({...fusionBase,strength:'LIGHT'}),balanced=T.translateFusion({...fusionBase,strength:'BALANCED'}),heavy=T.translateFusion({...fusionBase,strength:'HEAVY'});
@@ -125,6 +129,7 @@ assert.ok(appText.includes('data-dashboard-page')&&appText.includes('dashboardMo
 assert.ok(appText.includes('builder-progress')&&appText.includes('STEP ${step+1} OF 4'),'Build With Me is a guided workflow');
 assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} CATEGORY')&&appText.includes('LOCKED AGE CATEGORY'),'youth character setup is visibly separated and protected');
 assert.ok(appText.includes('youthControls')&&appText.includes('CLOTHING & ACCESSORIES')&&appText.includes('No adult character, clothing, body, pose, or expression lists are loaded'),'youth dropdown sources are fully separate from adult controls');
+assert.ok(appText.includes('INDIVIDUAL ZODIAC SIGN')&&appText.includes('const zodiacImagery='),'zodiac concepts expose individual canonical sign imagery');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
