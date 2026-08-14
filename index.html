@@ -76,6 +76,14 @@
           <section class="prompt-panel panel"><div class="section-heading"><div><b>PROMPT ENGINE</b><span>Build Your Finished Prompt</span></div></div><textarea id="promptInput" placeholder="Your finished sticker-art prompt will appear here..."></textarea><div class="prompt-actions"><button id="smartSuggest">✣ SMART SUGGEST</button><button id="copyPrompt">▣ COPY</button><button id="clearPrompt">× CLEAR</button><button id="rebuildPrompt">↻ REBUILD</button><button class="lime" id="buildPromptButton">✦ BUILD PROMPT</button></div></section>
         </aside>
       </main>
+      <section class="music-dock" aria-label="Create Mode Music player">
+        <div class="music-heading"><b>CREATE MODE MUSIC</b><span id="musicStatus">Upload your own soundtrack</span></div>
+        <label class="music-upload" for="musicFiles">＋ ADD MUSIC</label>
+        <input id="musicFiles" type="file" accept="audio/mpeg,audio/mp4,audio/wav,audio/ogg,audio/webm,audio/aac,audio/flac" multiple>
+        <select id="musicTrackSelect" aria-label="Choose uploaded music track" disabled><option>NO TRACKS</option></select>
+        <audio id="musicPlayer" controls preload="metadata" aria-label="Uploaded music player"></audio>
+        <button id="clearMusic" aria-label="Clear uploaded music" title="Clear music">×</button>
+      </section>
       <footer class="studio-credit" aria-label="Creator credit">Powered by <strong>Crown &amp; Craft Studio</strong></footer>
     </div>
   </div>

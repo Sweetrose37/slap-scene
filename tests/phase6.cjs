@@ -98,10 +98,12 @@ for(const [scenario,phrases] of guards){const prompt=T.buildPrompt(scenario);for
 assert.ok(!T.buildPrompt(auto).includes('natural hands with correct finger counts'),'anatomy boilerplate stays out of non-people prompts');
 
 // Static release, accessibility, responsive, and local-asset checks.
-const html=fs.readFileSync('index.html','utf8'),css=fs.readFileSync('css/styles.css','utf8'),readme=fs.readFileSync('README.md','utf8');
+const html=fs.readFileSync('index.html','utf8'),css=fs.readFileSync('css/styles.css','utf8'),readme=fs.readFileSync('README.md','utf8'),appText=fs.readFileSync('js/app.js','utf8');
 assert.ok(html.includes('Sticker Art Prompt Builder')&&!html.includes('Sticker Art Generator'));
 assert.ok(html.includes('aria-label="Close dialog"')&&html.includes('aria-live="polite"'));
 assert.ok(html.includes('id="manageImages"')&&html.includes('UPLOAD IMAGES'),'shared image upload is available');
+assert.ok(html.includes('id="musicFiles"')&&html.includes('id="musicPlayer"')&&html.includes('CREATE MODE MUSIC'),'private music player is available');
+assert.ok(appText.includes('slapSceneMusicLibrary')&&appText.includes('file.size<=30*1024*1024'),'music stays browser-local with file-size limits');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
