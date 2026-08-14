@@ -5,7 +5,7 @@ const vm=require('vm');
 const dataSource=fs.readFileSync('js/data.js','utf8');
 const appSource=fs.readFileSync('js/app.js','utf8').replace(
   /\n  init\(\);\n\}\)\(\);\s*$/,
-  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,zodiacSigns,zodiacImagery,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
+  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,youthMoods,zodiacSigns,zodiacImagery,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
 );
 const memory=new Map([
   ['slapSceneShakeHistory','{"corrupted":true}'],
@@ -54,6 +54,8 @@ for(const [age,options] of Object.entries(T.youthControls)){
   const selected={...base,subject:youthSubjectByAge[age],age:'Adult',presentation:options.presentations[0],faceShape:options.faceShapes[0],hairTexture:options.hairTextures[0],hairstyle:options.hairstyles[0],hairLength:options.hairLengths[0],hairVolume:options.hairVolumes[0],youthClothing:options.clothing[0],youthFootwear:options.footwear[0],youthProp:options.props[0],pose:options.poses[0],expression:options.expressions[0],gaze:options.gazes[0],cameraAngle:options.cameras[0]};
   const selectedPrompt=T.buildPrompt(selected).toLowerCase();
   for(const value of [selected.youthClothing,selected.youthFootwear,selected.pose,selected.expression])assert.ok(selectedPrompt.includes(value.toLowerCase()),`${age} selected ${value} reaches the prompt`);
+  assert.ok(!T.youthMoods[age].some(mood=>/flirty|romantic|glamorous|intense|defiant/i.test(mood)),`${age} mood list excludes adult-coded energy`);
+  const staleMoodPrompt=T.buildPrompt({...selected,mood:'Flirty'}).toLowerCase();assert.ok(!staleMoodPrompt.includes('flirty')&&staleMoodPrompt.includes(T.youthMoods[age][0].toLowerCase()),`${age} replaces stale adult mood values`);
 }
 
 const auto={...base,subject:'Automotive',style:'Retro Advertising',era:'1980s',material:'Chrome',composition:'Poster Inspired'};
@@ -129,6 +131,7 @@ assert.ok(appText.includes('data-dashboard-page')&&appText.includes('dashboardMo
 assert.ok(appText.includes('builder-progress')&&appText.includes('STEP ${step+1} OF 4'),'Build With Me is a guided workflow');
 assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} CATEGORY')&&appText.includes('LOCKED AGE CATEGORY'),'youth character setup is visibly separated and protected');
 assert.ok(appText.includes('youthControls')&&appText.includes('CLOTHING & ACCESSORIES')&&appText.includes('No adult character, clothing, body, pose, or expression lists are loaded'),'youth dropdown sources are fully separate from adult controls');
+assert.ok(appText.includes('youthMoods')&&appText.includes("youth?youthMoods[age]:D.moods"),'youth mood dropdowns do not use the adult mood source');
 assert.ok(appText.includes('INDIVIDUAL ZODIAC SIGN')&&appText.includes('const zodiacImagery='),'zodiac concepts expose individual canonical sign imagery');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
