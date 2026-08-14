@@ -5,7 +5,7 @@ const vm=require('vm');
 const dataSource=fs.readFileSync('js/data.js','utf8');
 const appSource=fs.readFileSync('js/app.js','utf8').replace(
   /\n  init\(\);\n\}\)\(\);\s*$/,
-  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
+  '\n  globalThis.__phase6={APP_VERSION,state,shakeHistory,libraryItems,youthControls,buildPrompt,shakeConcept,shakeSignature,signatureDifference,translateFusion,buildPackPrompts,isTooSimilar,buildSheetPlan,remixPrompt,getRemixSignature,signatureDistance,applyIPGuard,boundedNumber,sheetSizeLabel,compactPromptState};\n})();'
 );
 const memory=new Map([
   ['slapSceneShakeHistory','{"corrupted":true}'],
@@ -42,9 +42,18 @@ const youthExpectations={Babies:['natural infant','soft cotton onesie','infant p
 for(const [subject,phrases] of Object.entries(youthExpectations)){
   const youthPrompt=T.buildPrompt({...base,subject,age:'Adult',fashionDirection:'Couture-Inspired',bodyBuild:'Curvy',pose:'Editorial lean'}).toLowerCase();
   for(const phrase of phrases)assert.ok(youthPrompt.includes(phrase),`${subject} includes separate ${phrase} guidance`);
-  assert.ok(youthPrompt.includes('never apply adult body proportions')&&youthPrompt.includes('revealing garments'),`${subject} blocks adult styling`);
+  assert.ok(youthPrompt.includes('wholesome')&&youthPrompt.includes('fully covered')&&youthPrompt.includes('family-friendly'),`${subject} uses positive-only youth safety language`);
+  assert.ok(!/sexualized|lingerie|revealing garments|nightlife|body-emphasizing/i.test(youthPrompt),`${subject} avoids moderation-triggering negative vocabulary`);
   const youthPack=T.buildPackPrompts({...base,subject,age:'Adult'},3,'COORDINATED',{theme:`${subject} Collection`,wordingMode:'NONE'});
-  assert.ok(youthPack.entries.every(entry=>entry.prompt.includes('Never apply adult body proportions')&&!entry.prompt.includes('sharp tailored separates')),`${subject} pack reapplies the youth guard`);
+  assert.ok(youthPack.entries.every(entry=>entry.prompt.includes('Keep every choice wholesome')&&!entry.prompt.includes('sharp tailored separates')&&!/sexualized|lingerie|nightlife/i.test(entry.prompt)),`${subject} pack reapplies the positive youth guard`);
+}
+const youthSubjectByAge={Baby:'Babies',Toddler:'Toddlers',Child:'Kids',Tween:'Tweens',Teen:'Teens'},adultTerms=/curvy|muscular|statuesque|editorial lean|flirty|glamorous|high heel|nightlife|lingerie|couture/i;
+for(const [age,options] of Object.entries(T.youthControls)){
+  assert.ok(options.clothing.length>=4&&options.poses.length>=3&&options.expressions.length>=4,`${age} has complete separate controls`);
+  for(const [category,values] of Object.entries(options))assert.ok(!values.some(value=>adultTerms.test(value)),`${age} ${category} contains no adult vocabulary`);
+  const selected={...base,subject:youthSubjectByAge[age],age:'Adult',presentation:options.presentations[0],faceShape:options.faceShapes[0],hairTexture:options.hairTextures[0],hairstyle:options.hairstyles[0],hairLength:options.hairLengths[0],hairVolume:options.hairVolumes[0],youthClothing:options.clothing[0],youthFootwear:options.footwear[0],youthProp:options.props[0],pose:options.poses[0],expression:options.expressions[0],gaze:options.gazes[0],cameraAngle:options.cameras[0]};
+  const selectedPrompt=T.buildPrompt(selected).toLowerCase();
+  for(const value of [selected.youthClothing,selected.youthFootwear,selected.pose,selected.expression])assert.ok(selectedPrompt.includes(value.toLowerCase()),`${age} selected ${value} reaches the prompt`);
 }
 
 const auto={...base,subject:'Automotive',style:'Retro Advertising',era:'1980s',material:'Chrome',composition:'Poster Inspired'};
@@ -114,7 +123,8 @@ assert.ok(html.includes('id="musicFiles"')&&html.includes('id="musicPlayer"')&&h
 assert.ok(appText.includes('slapSceneMusicLibrary')&&appText.includes('file.size<=30*1024*1024'),'music stays browser-local with file-size limits');
 assert.ok(appText.includes('data-dashboard-page')&&appText.includes('dashboardModal()'),'dashboard is a connected workflow hub');
 assert.ok(appText.includes('builder-progress')&&appText.includes('STEP ${step+1} OF 4'),'Build With Me is a guided workflow');
-assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} PROFILE')&&appText.includes('Adult body and fashion controls are unavailable'),'youth character setup is visibly separated and protected');
+assert.ok(appText.includes('PROTECTED ${esc(age.toUpperCase())} CATEGORY')&&appText.includes('LOCKED AGE CATEGORY'),'youth character setup is visibly separated and protected');
+assert.ok(appText.includes('youthControls')&&appText.includes('CLOTHING & ACCESSORIES')&&appText.includes('No adult character, clothing, body, pose, or expression lists are loaded'),'youth dropdown sources are fully separate from adult controls');
 assert.ok(css.includes('button:focus-visible')&&css.includes('100dvh')&&css.includes('prefers-reduced-motion'));
 assert.ok(css.includes('background-image:var(--thumb-image,none)'),'gallery, pack, and style are blank until user images exist');
 assert.ok(css.includes('rgba(242,26,138,.34)')&&css.includes('rgba(17,217,244,.28)'),'holographic selectors remain intact');
